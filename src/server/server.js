@@ -11,6 +11,40 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+/*
+
+In order to register subroutes,
+you should use the express.Router
+instead of directly registering a
+nested path like "app.post('nested/path', cb)".
+
+Find out more about express.Router in
+http://expressjs.com/en/4x/api.html#express.router
+
+*/
+
+const authRoute = express.Router();
+
+authRoute.post('/login', (req, res) => {
+  const { email } = req.body;
+	const { password } = req.body;
+
+	conn.database.collection('users')
+		.find({ email, password })
+		.toArray((err, result) => {
+			if (result.length === 0) {
+				res.json({ data: 'Usuário não encontrado!', status: 401, ok: false });
+				return err;
+			} else {
+				res.json({ data: result, status: 200, ok: true });
+			}
+		});
+});
+
+app.use('/auth', authRoute);
+
+/* The registered route below has not a valid path */
+
 app.post('auth/login', (req, res) => {
 	const { email } = req.body;
 	const { password } = req.body;
