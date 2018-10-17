@@ -83,82 +83,56 @@ export default {
 	methods: {
 		...mapActions([ 'login' ]),
 		loging() {
-
 			const { email, password } = this;
-			console.log('email: ', email);
 
 			if (!this.logging) {
-				console.log('LOGING');
 				this.logging = true;
 
-			const { email, password, apiBaseURL } = this;
-			const loginURL = `${apiBaseURL}/auth/login`
-			const params = new URLSearchParams();
+				const { email, password, apiBaseURL } = this;
+				const loginURL = `${apiBaseURL}/auth/login`;
+				const params = new URLSearchParams();
 
-			params.append('email', email);
-			params.append('password', password);
+				params.append('email', email);
+				params.append('password', password);
 
-			const dataUser = {
-				email: params.getAll('email'),
-				password: params.getAll('password')
-			};
+				const user = {
+					email: params.get('email'),
+					password: params.get('password')
+				};
 
-			// axios.post(loginURL, dataUser)
-			// 	.then((res) => {
-			// 		const { data, ok, status } = res;
-			// 		const emailUser = data.data[0].email;
-			// 		const passwordUser = data.data[0].password;
+				axios.post(loginURL, user)
+					.then((res) => {
+						const { data, ok, status } = res;
 
-			// 		if (emailUser !== email || password !== passwordUser) {
-			// 				this.$q.notify({
-			// 					message: 'Usuário ou senha inválidos.',
-			// 					timeout: 3200,
-			// 					type: 'negative',
-			// 					color: 'negative',
-			// 					textColor: 'white',
-			// 					icon: 'error',
-			// 					position: 'bottom-left'
-			// 				});
+						/* Please, handle the response data! */
 
-			// 				return;
-			// 		}
+						const emailUser = data.data[0].email;
+						const passwordUser = data.data[0].password;
 
-			// 		if (emailUser === email && passwordUser === password) {
-			// 				console.log('Log in: ', emailUser);
-			// 			  this.$router.push({ name: 'index' });
-			// 		}
+						if (emailUser !== email || password !== passwordUser) {
+								this.$q.notify({
+									message: 'Usuário ou senha inválidos.',
+									timeout: 3200,
+									type: 'negative',
+									color: 'negative',
+									textColor: 'white',
+									icon: 'error',
+									position: 'bottom-left'
+								});
 
-			// 	})
-			this.login({ email, password }) // this is a Vuex action
-				.then(({ hasTemporaryPassword, temporaryPassword }) => {
-					console.log('aaaaaa')
-					this.logging = false;
-					if (hasTemporaryPassword) {
-						console.log('11111111111111');
-						this.$router.push({
-							name: 'password.settings',
-							params: { temporaryPassword: true }
-						});
-
-						this.$store.commit('SET_TMP_PWD', temporaryPassword);
-
-						return;
-					}
-
-					this.$router.push({ name: 'home' }, () => {
-						console.log('222222222222222');
-						if (this.$store.getters.currentUser.assetsLength > 5) {
-							this.$router.push('/list');
-							this.$store.dispatch('setView', 'list');
-						} else {
-							this.$router.push('/cards');
-							this.$store.dispatch('setView', 'cards');
+								return;
 						}
-					});
-				})
-				.catch((err) => {
-					console.log(err.message);
-				});
+
+						if (emailUser === email && passwordUser === password) {
+								this.$router.push({ name: 'index' });
+						}
+					})
+					.catch((err) => {
+						console.log(err.message);
+					})
+					.finally(() => this.logging = false);
+
+					/* Please, add a error handler for this request above! */
 			}
 		}
 	},
