@@ -15,24 +15,24 @@ const routes = [
 			{
 				name: 'search',
 				path: '/search',
-				component: load('../components/Search'),
+				component: () => import('../components/Search'),
 				meta: { requiresAuth: true }
 			},
 			{
 				name: 'index',
 				path: '/index',
-				component: () => import('components/Index.vue')
+				component: () => import('../components/Index.vue')
 			},
 			// {
 			// 	name: 'search',
 			// 	path: '/search',
 			// 	component: () => import('components/Search.vue')
 			// },
-			// {
-			// 	name: 'process',
-			// 	path: '/process',
-			// 	component: () => import('components/Process.vue')
-			// },
+			{
+				name: 'process',
+				path: '/process',
+				component: () => import('../components/Process.vue')
+			},
 			// {
 			// 	name: 'about',
 			// 	path: '/about',

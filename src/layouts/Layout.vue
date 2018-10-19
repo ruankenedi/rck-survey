@@ -47,7 +47,7 @@
 				<q-item>
 					<q-item-side class="flex">
 						<q-icon name="account circle" color="teal" size="3em" style="margin-right: 8px;"/>
-						<!-- <h5 class="light-paragraph">{{ currentUser() }}</h5> -->
+						<h5 class="light-paragraph">{{ currentUser() }}</h5>
 					</q-item-side>
 				</q-item>
         <q-list-header>Mais</q-list-header>
@@ -76,9 +76,13 @@ export default {
     }
   },
   methods: {
-		// currentUser() {
-		// 	return name;
-		// },
+		currentUser() {
+			console.log('CurrentUser');
+			const { name } = this.$store.getters.currentUser;
+			console.log('NameEEE: ', name);
+
+      return name ? name.split(' ')[0].toUpperCase() : name;
+		},
 		nameTitle() {
 			const { name } = this.$route;
 			if (name === 'process') {
