@@ -80,6 +80,7 @@ export default {
 		loging() {
 			const { email, password } = this;
 
+
 			// this.login({ email, password }) // this is a Vuex action
 			// 	.then(({ hasTemporaryPassword, temporaryPassword }) => {
 			// 		console.log('aaaaaa')

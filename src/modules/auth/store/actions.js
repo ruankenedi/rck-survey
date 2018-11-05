@@ -1,11 +1,11 @@
-import { http, setToken as httpSetToken, removeToken as httpRemoveToken } from 'src/plugins/http';
-import getData from 'src/utils';
+import { http, setToken as httpSetToken, removeToken as httpRemoveToken } from '../../../plugins/http';
+import { getData } from '../../../utils';
 import jwtDecode from 'jwt-decode';
+console.log('jwt_decode', jwtDecode)
 
 import * as MTYPES from './mutations-types';
 
 export const login = ({ commit, dispatch, state }, { email, password }) => {
-	console.log('PASSWORD: ', password);
 	dispatch('setInitialState');
 
   commit(MTYPES.LOGING);
@@ -18,7 +18,7 @@ export const login = ({ commit, dispatch, state }, { email, password }) => {
       .then(getData)
       .then(({ token }) => {
 				console.log('arrived 1');
-        console.log('old token', state.token);
+        console.log('old token', state.token, email);
         const {
           usrNm,
           usrTp,
@@ -53,8 +53,9 @@ export const login = ({ commit, dispatch, state }, { email, password }) => {
         resolve({ hasTemporaryPassword: tmp, temporaryPassword });
       })
       .catch((e) => {
-				console.log('arrived 2');
-        const { response } = e;
+				console.log('arrived 2', e);
+				const { response } = e;
+				console.log('EEEEEEEEEEEEEEE', e)
         commit(MTYPES.LOGING, false);
 
         if (process.env.NODE_ENV === 'development') {
@@ -64,6 +65,13 @@ export const login = ({ commit, dispatch, state }, { email, password }) => {
         reject(response.data.message, 5000);
       });
   });
+};
+
+export const loggedIn = ({ dispatch, state }) => {
+  httpSetToken(state.token);
+  if (!state.startedWatch) {
+    dispatch('watchAssets');
+  }
 };
 
 export const logout = ({ commit, dispatch }) => {
